@@ -1,0 +1,23 @@
+import { useState, useEffect } from 'react';
+
+export function useVisualViewport() {
+  const [viewportHeight, setViewportHeight] = useState(window.innerHeight);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setViewportHeight(window.visualViewport?.height || window.innerHeight);
+    };
+    
+    window.visualViewport?.addEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize);
+    
+    handleResize();
+    
+    return () => {
+      window.visualViewport?.removeEventListener('resize', handleResize);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  return viewportHeight;
+}
